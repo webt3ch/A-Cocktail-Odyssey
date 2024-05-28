@@ -1,0 +1,100 @@
+<!-- Developed by Mario Saponaro -->
+<!-- Last update 18/03/2024 15:32:03 -->
+
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Ricette di Cocktail</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <h1 class="mb-4 text-center">Ricette Cocktail</h1>
+          <label for="searchInput" class="mb-2 d-block text-center"
+            >Gli alcolici sono riservati ai maggiorenni</label
+          >
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              id="searchInput"
+              placeholder="Inserisci il nome del drink"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-success"
+                type="button"
+                onclick="searchCocktail()"
+              >
+                Cerca
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4" id="cocktailList">
+        <!-- cards cocktail-->
+      </div>
+    </div>
+
+    <!-- Modal Descrizione-->
+    <div
+      class="modal fade"
+      id="cocktailModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="cocktailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cocktailModalLabel">
+              Dettagli del Cocktail
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img
+              src=""
+              alt="Immagine del cocktail"
+              id="modalCocktailImage"
+              class="img-fluid mb-3 rounded"
+            />
+            <h5 id="modalCocktailName" class="mb-3"></h5>
+            <p id="modalCocktailDescription"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container text-center">
+        <p class="text-muted mb-0">Developed by Mario Saponaro ©</p>
+      </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="./js/index.js"></script>
+  </body>
+</html>
