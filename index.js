@@ -36,7 +36,7 @@ function displayCocktails(cocktails) {
         <div class="card-body">
           <h5 class="card-title">${cocktail.strDrink}</h5>
           <p class="card-text">${truncateDescription(cocktail.strInstructionsIT, 100)}</p>
-          <button class="btn btn-primary" data-toggle="modal" data-target="#cocktailModal" onclick="displayModal('${cocktail.strDrink}', '${cocktail.strDrinkThumb}', '${escapeHtml(cocktail.strInstructionsIT)}')">Dettagli</button>
+          <button class="btn btn-primary" data-toggle="modal" data-target="#cocktailModal" onclick="displayModal('${escapeHtml(cocktail.strDrink)}', '${escapeHtml(cocktail.strDrinkThumb)}', '${escapeHtml(cocktail.strInstructionsIT)}')">Dettagli</button>
         </div>
       </div>
     `;
