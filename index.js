@@ -1,75 +1,45 @@
-// Funzione per cercare i cocktail
+// Funzione per la ricerca dei cocktail
 function searchCocktail() {
-  // Ottieni il valore dalla barra di ricerca
   var searchInput = document.getElementById('searchInput').value;
+  var apiEndpoint = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + searchInput;
 
-  // Verifica se il valore è vuoto
-  if (!searchInput.trim()) {
-    alert('Inserisci il nome del cocktail!');
-    return;
-  }
-
-  // Costruisci l'URL per la ricerca del cocktail
-  var apiEndpoint = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + encodeURIComponent(searchInput);
-
-  // Effettua la richiesta HTTP GET per ottenere i dati dei cocktail
   fetch(apiEndpoint)
-    .then(response => {
-      // Verifica se la risposta ha successo (status code 200)
-      if (!response.ok) {
-        throw new Error('Errore nella ricerca del cocktail: ' + response.statusText);
-      }
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-      // Visualizza i cocktail ottenuti
       displayCocktails(data.drinks);
     })
-    .catch(error => {
-      console.error(error);
-      alert('Si è verificato un errore nella ricerca del cocktail.');
-    });
+    .catch(error => console.error('Errore nella ricerca del cocktail:', error));
 }
 
-// Funzione per visualizzare i cocktail
+// Funzione per visualizzare i cocktail nella pagina
 function displayCocktails(cocktails) {
   var cocktailList = document.getElementById('cocktailList');
   cocktailList.innerHTML = '';
 
-  // Verifica se sono stati trovati cocktail
-  if (cocktails === null) {
-    cocktailList.innerHTML = '<p>Nessun cocktail trovato.</p>';
-    return;
-  }
+  if (cocktails) {
+    cocktails.forEach(cocktail => {
+      var card = document.createElement('div');
+      card.className = 'col-md-4 mb-4 h-100';
 
-  cocktails.forEach(cocktail => {
-    var card = document.createElement('div');
-    card.className = 'col-md-4 mb-4 h-100';
-
-    card.innerHTML = `
-      <div class="card h-100">
-        <img src="${cocktail.strDrinkThumb}" alt="${cocktail.strDrink}" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">${cocktail.strDrink}</h5>
-          <p class="card-text">${truncateDescription(cocktail.strInstructionsIT, 100)}</p>
-          <button class="btn btn-primary" data-toggle="modal" data-target="#cocktailModal" onclick="displayModal('${cocktail.strDrink}', '${cocktail.strDrinkThumb}', '${cocktail.strInstructionsIT}')">Dettagli</button>
+      card.innerHTML = `
+        <div class="card h-100">
+          <img src="${cocktail.strDrinkThumb}" alt="${cocktail.strDrink}" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">${cocktail.strDrink}</h5>
+            <p class="card-text">${cocktail.strInstructionsIT}</p>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#cocktailModal" onclick="displayModal('${cocktail.strDrink}', '${cocktail.strDrinkThumb}', '${cocktail.strInstructionsIT}')">Dettagli</button>
+          </div>
         </div>
-      </div>
-    `;
+      `;
 
-    cocktailList.appendChild(card);
-  });
-}
-
-// Funzione per ridurre la descrizione del cocktail
-function truncateDescription(description, maxLength) {
-  if (description.length > maxLength) {
-    return description.substring(0, maxLength) + '...';
+      cocktailList.appendChild(card);
+    });
+  } else {
+    cocktailList.innerHTML = '<div class="col text-center"><p>Nessun cocktail trovato.</p></div>';
   }
-  return description;
 }
 
-// Funzione per visualizzare il modal con i dettagli del cocktail
+// Funzione per visualizzare i dettagli del cocktail nel modal
 function displayModal(name, image, description) {
   document.getElementById('modalCocktailName').innerText = name;
   document.getElementById('modalCocktailImage').src = image;
