@@ -1,91 +1,79 @@
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: hidden;
-}
+// Funzione per cercare i cocktail
+function searchCocktail() {
+  // Ottieni il valore dalla barra di ricerca
+  var searchInput = document.getElementById('searchInput').value;
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+  // Verifica se il valore è vuoto
+  if (!searchInput.trim()) {
+    alert('Inserisci il nome del cocktail!');
+    return;
   }
-  50% {
-    background-position: 100% 50%;
+
+  // Costruisci l'URL per la ricerca del cocktail
+  var apiEndpoint = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + encodeURIComponent(searchInput);
+
+  // Effettua la richiesta HTTP GET per ottenere i dati dei cocktail
+  fetch(apiEndpoint)
+    .then(response => {
+      // Verifica se la risposta ha successo (status code 200)
+      if (!response.ok) {
+        throw new Error('Errore nella ricerca del cocktail: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Visualizza i cocktail ottenuti
+      displayCocktails(data.drinks);
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Si è verificato un errore nella ricerca del cocktail.');
+    });
+}
+
+// Funzione per visualizzare i cocktail
+function displayCocktails(cocktails) {
+  var cocktailList = document.getElementById('cocktailList');
+  cocktailList.innerHTML = '';
+
+  // Verifica se sono stati trovati cocktail
+  if (cocktails === null) {
+    cocktailList.innerHTML = '<p>Nessun cocktail trovato.</p>';
+    return;
   }
-  100% {
-    background-position: 0% 50%;
+
+  cocktails.forEach(cocktail => {
+    var card = document.createElement('div');
+    card.className = 'col-md-4 mb-4 h-100';
+
+    card.innerHTML = `
+      <div class="card h-100">
+        <img src="${cocktail.strDrinkThumb}" alt="${cocktail.strDrink}" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">${cocktail.strDrink}</h5>
+          <p class="card-text">${truncateDescription(cocktail.strInstructionsIT, 100)}</p>
+          <button class="btn btn-primary" data-toggle="modal" data-target="#cocktailModal" onclick="displayModal('${cocktail.strDrink}', '${cocktail.strDrinkThumb}', '${cocktail.strInstructionsIT}')">Dettagli</button>
+        </div>
+      </div>
+    `;
+
+    cocktailList.appendChild(card);
+  });
+}
+
+// Funzione per ridurre la descrizione del cocktail
+function truncateDescription(description, maxLength) {
+  if (description.length > maxLength) {
+    return description.substring(0, maxLength) + '...';
   }
+  return description;
 }
 
-.container {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  transition: box-shadow 0.3s ease;
-  width: 100%;
-  max-width: 800px;
-}
+// Funzione per visualizzare il modal con i dettagli del cocktail
+function displayModal(name, image, description) {
+  document.getElementById('modalCocktailName').innerText = name;
+  document.getElementById('modalCocktailImage').src = image;
+  document.getElementById('modalCocktailDescription').innerText = description;
 
-.container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-h1 {
-  color: #000000;
-}
-
-label {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.input-group {
-  margin-bottom: 20px;
-  transition: transform 0.3s ease;
-}
-
-.input-group:hover {
-  transform: scale(1.05);
-}
-
-.btn-success {
-  background-color: #28a745;
-  border: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-success:hover {
-  background-color: #218838;
-  transform: scale(1.1);
-}
-
-.card {
-  border: none;
-  border-radius: 10px;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transform: scale(1.05);
-}
-
-.modal-content {
-  border-radius: 10px;
-}
-
-.modal-body img {
-  border-radius: 10px;
-  transition: filter 0.3s ease;
-}
-
-.text-muted {
-  color: #6c757d !important;
+  $('#cocktailModal').modal('show');
 }
