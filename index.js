@@ -1,56 +1,91 @@
-function searchCocktail() {
-  var searchInput = document.getElementById('searchInput').value;
-  var apiEndpoint = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + encodeURIComponent(searchInput);
-  
-  fetch(apiEndpoint)
-    .then(response => response.json())
-    .then(data => {
-      console.log('Dati ricevuti:', data);
-      if (data.drinks) {
-        displayCocktails(data.drinks);
-      } else {
-        document.getElementById('cocktailList').innerHTML = '<p class="text-center">Nessun cocktail trovato.</p>';
-      }
-    })
-    .catch(error => {
-      console.error('Errore durante la richiesta:', error);
-    });
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
 }
 
-function truncateDescription(description, maxLength) {
-  if (!description) return 'Descrizione non disponibile';
-  return description.length > maxLength ? description.substring(0, maxLength) + '...' : description;
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-function displayCocktails(cocktails) {
-  var cocktailList = document.getElementById('cocktailList');
-  cocktailList.innerHTML = '';
-  
-  cocktails.forEach(cocktail => {
-    var card = document.createElement('div');
-    card.className = 'col-md-4 mb-4';
-    
-    card.innerHTML = `
-      <div class="card h-100">
-        <img src="${cocktail.strDrinkThumb}" alt="${cocktail.strDrink}" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">${cocktail.strDrink}</h5>
-          <p class="card-text">${truncateDescription(cocktail.strInstructionsIT || cocktail.strInstructions, 100)}</p>
-          <button class="btn btn-primary" data-toggle="modal" data-target="#cocktailModal" onclick="displayModal('${escapeHtml(cocktail.strDrink)}', '${escapeHtml(cocktail.strDrinkThumb)}', '${escapeHtml(cocktail.strInstructionsIT || cocktail.strInstructions)}')">Dettagli</button>
-        </div>
-      </div>
-    `;
-    
-    cocktailList.appendChild(card);
-  });
+.container {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 800px;
 }
 
-function displayModal(name, image, description) {
-  document.getElementById('modalCocktailName').innerText = name;
-  var imgElement = document.getElementById('modalCocktailImage');
-  
-  if (image) {
-    imgElement.src = image;
-    imgElement.style.display = 'block';
-  } else {
-    imgElement.style.display
+.container:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  color: #000000;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.input-group:hover {
+  transform: scale(1.05);
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  transform: scale(1.1);
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-body img {
+  border-radius: 10px;
+  transition: filter 0.3s ease;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
